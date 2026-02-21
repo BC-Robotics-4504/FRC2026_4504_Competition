@@ -28,7 +28,8 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
     private final double D = 0;
     // END CONSTANTS
 
-    private final SparkMax intakeMotor;
+    private final SparkMax intakeLeaderMotor;
+    private final SparkMax intakeFollowerMotor;
     private final RelativeEncoder intakeEncoder;
 
     // Profiled to ensure smooth movement
@@ -38,26 +39,36 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
     private boolean isDone = false;
 
     public CANIntakeArmSubsystem() {
-        intakeMotor = new SparkMax(56, MotorType.kBrushless);
-        intakeEncoder = intakeMotor.getEncoder();
+        intakeLeaderMotor = new SparkMax(56, MotorType.kBrushless);
+        intakeFollowerMotor = new SparkMax(57, MotorType.kBrushless);
+        intakeEncoder = intakeLeaderMotor.getEncoder();
 
-        SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+        SparkMaxConfig intakeLeaderMotorConfig = new SparkMaxConfig();
+        SparkMaxConfig intakeFollowerMotorConfig = new SparkMaxConfig();
 
-        intakeMotorConfig
+        intakeLeaderMotorConfig
         .smartCurrentLimit(60)
         .idleMode(IdleMode.kBrake)
         .inverted(false);
 
-        intakeMotorConfig.encoder
+        intakeLeaderMotorConfig.encoder
         .positionConversionFactor(1)
         .velocityConversionFactor(1);
 
-        intakeMotorConfig.closedLoop
+        intakeLeaderMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .p(P).i(I).d(D);
 
-        intakeMotor.configure(
-            intakeMotorConfig,
+        intakeLeaderMotor.configure(
+            intakeLeaderMotorConfig,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
+        
+        intakeFollowerMotorConfig.apply(intakeLeaderMotorConfig).follow(56);
+        
+        intakeLeaderMotor.configure(
+            intakeFollowerMotorConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters
         );
@@ -94,16 +105,16 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
 
         nt_angle.setDouble(encoderAngle);
 
-        double intakeMotorSetpoint = MathUtil.clamp(nt_desiredAngle.getDouble(40), 20, 60);
+        double intakeLeaderMotorSetpoint = MathUtil.clamp(nt_desiredAngle.getDouble(40), 20, 60);
 
-        double intakeMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 
-                                      +*/ intakePIDController.calculate(encoderAngle, intakeMotorSetpoint);
+        double intakeLeaderMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 
+                                      +*/ intakePIDController.calculate(encoderAngle, intakeLeaderMotorSetpoint);
         
-        System.out.print(intakeMotorVoltage + " ");
-        System.out.print(intakeMotorSetpoint + " ");
+        System.out.print(intakeLeaderMotorVoltage + " ");
+        System.out.print(intakeLeaderMotorSetpoint + " ");
         System.out.println(encoderAngle);
 
-        intakeMotor.setVoltage(intakeMotorVoltage);
-        isDone = Math.abs(encoderAngle - intakeMotorSetpoint) < 1;
+        intakeLeaderMotor.setVoltage(intakeLeaderMotorVoltage);
+        isDone = Math.abs(encoderAngle - intakeLeaderMotorSetpoint) < 1;
     }
 }

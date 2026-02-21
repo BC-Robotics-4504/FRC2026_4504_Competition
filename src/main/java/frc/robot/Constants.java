@@ -47,6 +47,11 @@ public final class Constants {
     public static final double SPIN_UP_SECONDS = 1;
   }
 
+  public static final class IntakeArmConstants {
+    public static final int INTAKE_ARM_LEADER_MOTOR_ID = 56;
+    public static final int INTAKE_ARM_FOLLOWER_MOTOR_ID = 57;
+  }
+
   public static final class OperatorConstants {
     // Port constants for driver and operator controllers. These should match the
     // values in the Joystick tab of the Driver Station software
