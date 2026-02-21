@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.FuelConstants.*;
 
 public class CANFuelSubsystem extends SubsystemBase {
-  private final SparkMax feederRoller;
+  private final SparkMax upperFeederRoller;
+  private final SparkMax lowerFeederRoller;
   private final SparkMax intakeRoller;
   private final SparkMax shooterRoller;
 
@@ -23,14 +24,31 @@ public class CANFuelSubsystem extends SubsystemBase {
   public CANFuelSubsystem() {
     // create brushed motors for each of the motors on the launcher mechanism
     intakeRoller = new SparkMax(INTAKE_MOTOR_ID, MotorType.kBrushless);
-    feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushless);
+    upperFeederRoller = new SparkMax(UPPER_FEEDER_MOTOR_ID, MotorType.kBrushless);
+    lowerFeederRoller = new SparkMax(LOWER_FEEDER_MOTER_ID, MotorType.kBrushless);
     shooterRoller = new SparkMax(SHOOTER_MOTOR_ID, MotorType.kBrushless);
 
     // create the configuration for the feeder roller, set a current limit and apply
     // the config to the controller
-    SparkMaxConfig feederConfig = new SparkMaxConfig();
-    feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
-    feederRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    SparkMaxConfig upperFeederConfig = new SparkMaxConfig();
+    upperFeederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
+
+    upperFeederRoller.configure(
+      upperFeederConfig, 
+      ResetMode.kResetSafeParameters, 
+      PersistMode.kPersistParameters
+    );
+
+    SparkMaxConfig lowerFeederConfig = new SparkMaxConfig();
+    lowerFeederConfig
+      .apply(upperFeederConfig)
+      .follow(UPPER_FEEDER_MOTOR_ID, true);
+
+    lowerFeederRoller.configure(
+      lowerFeederConfig, 
+      ResetMode.kResetSafeParameters, 
+      PersistMode.kPersistParameters
+    );
 
     // create the configuration for the intake roller, set a current limit, set the motor to inverted
     SparkMaxConfig intakeConfig = new SparkMaxConfig();
@@ -58,8 +76,8 @@ public class CANFuelSubsystem extends SubsystemBase {
   }
 
   // A method to set the voltage of the intake roller
-  public void setFeederRoller(double voltage) {
-    feederRoller.setVoltage(voltage);
+  public void setFeederRollers(double voltage) {
+    upperFeederRoller.setVoltage(voltage);
   }
 
   public void setShooterRoller(double voltage) {
@@ -68,7 +86,7 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   // A method to stop the rollers
   public void stop() {
-    feederRoller.set(0);
+    upperFeederRoller.set(0);
     intakeRoller.set(0);
   }
 
