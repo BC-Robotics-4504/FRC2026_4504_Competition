@@ -67,13 +67,17 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
 
         TrapezoidProfile.Constraints intakePIDConstraints;
         // Set both max velocity and max acceleration to 10 deg/sec
-        intakePIDConstraints = new TrapezoidProfile.Constraints(10, 10);
+        intakePIDConstraints = new TrapezoidProfile.Constraints(
+            INTAKE_ARM_MAX_VELOCITY,
+            INTAKE_ARM_MAX_ACCELERATION
+        );
+        
         // Temp PID values, will probably need tuning
         intakePIDController = new ProfiledPIDController(P, I, D, intakePIDConstraints);
 
         nt_angle = SmartDashboard.getEntry("Intake Angle");
         nt_desiredAngle = SmartDashboard.getEntry("Intake Desired Angle");
-        nt_desiredAngle.setDefaultDouble(INTAKE_ARM_DEFAULT_ROTATION);
+        nt_desiredAngle.setDefaultDouble(INTAKE_ARM_DEFAULT_ANGLE);
     }
     
     public double getEncoderAngle() {
@@ -98,9 +102,9 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
         nt_angle.setDouble(encoderAngle);
 
         double intakeLeaderMotorSetpoint = MathUtil.clamp(
-            nt_desiredAngle.getDouble(INTAKE_ARM_DEFAULT_ROTATION),
-            INTAKE_ARM_MIN_ROTATION,
-            INTAKE_ARM_MAX_ROTATION
+            nt_desiredAngle.getDouble(INTAKE_ARM_DEFAULT_ANGLE),
+            INTAKE_ARM_MIN_ANGLE,
+            INTAKE_ARM_MAX_ANGLE
         );
 
         double intakeLeaderMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 

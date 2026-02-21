@@ -59,13 +59,39 @@ public final class Constants {
     public static final double ZERO_OFFSET = 0;
     public static final double GRAVITY_COMPENSATION = 0.75;
 
+    public static final double INTAKE_ARM_MAX_VELOCITY = 10;
+    public static final double INTAKE_ARM_MAX_ACCELERATION = 10;
+
     public static final double P = 0.01;
     public static final double I = 0;
     public static final double D = 0;
 
-    public static final double INTAKE_ARM_DEFAULT_ROTATION = 55;
-    public static final double INTAKE_ARM_MIN_ROTATION = 20;
-    public static final double INTAKE_ARM_MAX_ROTATION = 80;
+    public static final double INTAKE_ARM_DEFAULT_ANGLE = 55;
+    public static final double INTAKE_ARM_MIN_ANGLE = 20;
+    public static final double INTAKE_ARM_MAX_ANGLE = 80;
+  }
+
+  public static final class ElevatorConstants {
+    public static final int ELEVATOR_MOTOR_ID = 51;
+    
+    public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 60;
+
+    public static final double ELEVATOR_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final double ELEVATOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+
+    public static final double ZERO_OFFSET = 0;
+    public static final double GRAVITY_COMPENSATION = 0.75;
+
+    public static final double ELEVATOR_MAX_VELOCITY = 3.0;
+    public static final double ELEVATOR_MAX_ACCELERATION = 3.0;
+
+    public static final double P = 1.0;
+    public static final double I = 0;
+    public static final double D = 0.01;
+
+    public static final double ELEVATOR_DEFAULT_ROTATION = 1;
+    public static final double ELEVATOR_MIN_ROTATION = 0;
+    public static final double ELEVATOR_MAX_ROTATION = 10;
   }
 
   public static final class OperatorConstants {

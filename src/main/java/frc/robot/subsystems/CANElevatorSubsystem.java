@@ -15,19 +15,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-// TODO: add constants to the constants file, rather than magic numbers or constants within this class
+import static frc.robot.Constants.ElevatorConstants.*;
 
 public class CANElevatorSubsystem extends SubsystemBase {
-    // CONSTANTS
-    private final double ZERO_OFFSET = 0;
-    private final double GRAVITY_COMPENSATION = 0.75;
-
-    private final double P = 1.0;
-    private final double I = 0;
-    private final double D = 0.01;
-    // END CONSTANTS
-
     private final SparkMax elevatorMotor;
     private final RelativeEncoder elevatorEncoder;
 
@@ -38,19 +28,19 @@ public class CANElevatorSubsystem extends SubsystemBase {
     private boolean isDone = false;
 
     public CANElevatorSubsystem() {
-        elevatorMotor = new SparkMax(51, MotorType.kBrushless);
+        elevatorMotor = new SparkMax(ELEVATOR_MOTOR_ID, MotorType.kBrushless);
         elevatorEncoder = elevatorMotor.getEncoder();
 
         SparkMaxConfig elevatorMotorConfig = new SparkMaxConfig();
 
         elevatorMotorConfig
-        .smartCurrentLimit(60)
+        .smartCurrentLimit(ELEVATOR_MOTOR_CURRENT_LIMIT)
         .idleMode(IdleMode.kBrake)
         .inverted(false);
 
         elevatorMotorConfig.encoder
-        .positionConversionFactor(1)
-        .velocityConversionFactor(1);
+        .positionConversionFactor(ELEVATOR_ENCODER_POSITION_CONVERSION_FACTOR)
+        .velocityConversionFactor(ELEVATOR_ENCODER_VELOCITY_CONVERSION_FACTOR);
 
         elevatorMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -64,13 +54,13 @@ public class CANElevatorSubsystem extends SubsystemBase {
 
         TrapezoidProfile.Constraints elevatorPIDConstraints;
         // Set both max velocity and max acceleration to 3.0 rotations/sec
-        elevatorPIDConstraints = new TrapezoidProfile.Constraints(3.0, 3.0);
+        elevatorPIDConstraints = new TrapezoidProfile.Constraints(ELEVATOR_MAX_VELOCITY, ELEVATOR_MAX_ACCELERATION);
         // Temp PID values, will probably need tuning
         elevatorPIDController = new ProfiledPIDController(P, I, D, elevatorPIDConstraints);
 
         nt_rotation = SmartDashboard.getEntry("Elevator Rotation");
         nt_desiredRotation = SmartDashboard.getEntry("Elevator Desired Rotation");
-        nt_desiredRotation.setDefaultDouble(1);
+        nt_desiredRotation.setDefaultDouble(ELEVATOR_DEFAULT_ROTATION);
     }
     
     public double getEncoderRotation() {
@@ -93,7 +83,11 @@ public class CANElevatorSubsystem extends SubsystemBase {
 
         nt_rotation.setDouble(encoderRotation);
 
-        double elevatorMotorSetpoint = MathUtil.clamp(nt_desiredRotation.getDouble(1), 0, 10);
+        double elevatorMotorSetpoint = MathUtil.clamp(
+            nt_desiredRotation.getDouble(ELEVATOR_DEFAULT_ROTATION), 
+            ELEVATOR_MIN_ROTATION, 
+            ELEVATOR_MAX_ROTATION
+        );
 
         double elevatorMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderRotation)) 
                                       +*/ elevatorPIDController.calculate(encoderRotation, elevatorMotorSetpoint);
