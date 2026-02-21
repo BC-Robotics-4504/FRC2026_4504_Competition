@@ -15,19 +15,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-// TODO: add constants to the constants file, rather than magic numbers or constants within this class
+import static frc.robot.Constants.IntakeArmConstants.*;
 
 public class CANIntakeArmSubsystem extends SubsystemBase {
-    // CONSTANTS
-    private final double ZERO_OFFSET = 0;
-    private final double GRAVITY_COMPENSATION = 0.75;
-
-    private final double P = 0.01;
-    private final double I = 0;
-    private final double D = 0;
-    // END CONSTANTS
-
     private final SparkMax intakeLeaderMotor;
     private final SparkMax intakeFollowerMotor;
     private final RelativeEncoder intakeEncoder;
@@ -39,25 +29,25 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
     private boolean isDone = false;
 
     public CANIntakeArmSubsystem() {
-        intakeLeaderMotor = new SparkMax(56, MotorType.kBrushless);
-        intakeFollowerMotor = new SparkMax(57, MotorType.kBrushless);
+        intakeLeaderMotor = new SparkMax(INTAKE_ARM_LEADER_MOTOR_ID, MotorType.kBrushless);
+        intakeFollowerMotor = new SparkMax(INTAKE_ARM_FOLLOWER_MOTOR_ID, MotorType.kBrushless);
         intakeEncoder = intakeLeaderMotor.getEncoder();
 
         SparkMaxConfig intakeLeaderMotorConfig = new SparkMaxConfig();
         SparkMaxConfig intakeFollowerMotorConfig = new SparkMaxConfig();
 
         intakeLeaderMotorConfig
-        .smartCurrentLimit(60)
-        .idleMode(IdleMode.kBrake)
-        .inverted(false);
+            .smartCurrentLimit(INTAKE_ARM_MOTOR_CURRENT_LIMIT)
+            .idleMode(IdleMode.kBrake)
+            .inverted(false);
 
         intakeLeaderMotorConfig.encoder
-        .positionConversionFactor(1)
-        .velocityConversionFactor(1);
+            .positionConversionFactor(INTAKE_ARM_ENCODER_POSITION_CONVERSION_FACTOR)
+            .velocityConversionFactor(INTAKE_ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
 
         intakeLeaderMotorConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(P).i(I).d(D);
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .p(P).i(I).d(D);
 
         intakeLeaderMotor.configure(
             intakeLeaderMotorConfig,
@@ -65,9 +55,11 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
             PersistMode.kPersistParameters
         );
         
-        intakeFollowerMotorConfig.apply(intakeLeaderMotorConfig).follow(56);
+        intakeFollowerMotorConfig
+            .apply(intakeLeaderMotorConfig)
+            .follow(INTAKE_ARM_LEADER_MOTOR_ID);
         
-        intakeLeaderMotor.configure(
+        intakeFollowerMotor.configure(
             intakeFollowerMotorConfig,
             ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters
@@ -81,7 +73,7 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
 
         nt_angle = SmartDashboard.getEntry("Intake Angle");
         nt_desiredAngle = SmartDashboard.getEntry("Intake Desired Angle");
-        nt_desiredAngle.setDefaultDouble(55);
+        nt_desiredAngle.setDefaultDouble(INTAKE_ARM_DEFAULT_ROTATION);
     }
     
     public double getEncoderAngle() {
@@ -105,7 +97,11 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
 
         nt_angle.setDouble(encoderAngle);
 
-        double intakeLeaderMotorSetpoint = MathUtil.clamp(nt_desiredAngle.getDouble(40), 20, 60);
+        double intakeLeaderMotorSetpoint = MathUtil.clamp(
+            nt_desiredAngle.getDouble(INTAKE_ARM_DEFAULT_ROTATION),
+            INTAKE_ARM_MIN_ROTATION,
+            INTAKE_ARM_MAX_ROTATION
+        );
 
         double intakeLeaderMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 
                                       +*/ intakePIDController.calculate(encoderAngle, intakeLeaderMotorSetpoint);

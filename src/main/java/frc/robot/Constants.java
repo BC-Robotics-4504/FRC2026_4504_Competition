@@ -29,8 +29,8 @@ public final class Constants {
 
   public static final class FuelConstants {
     // Motor controller IDs for Fuel Mechanism motors
-    public static final int FEEDER_MOTOR_ID = 53;
     public static final int INTAKE_MOTOR_ID = 52;
+    public static final int FEEDER_MOTOR_ID = 53;
     public static final int SHOOTER_MOTOR_ID = 54;
 
     // Current limit and nominal voltage for fuel mechanism motors.
@@ -50,6 +50,22 @@ public final class Constants {
   public static final class IntakeArmConstants {
     public static final int INTAKE_ARM_LEADER_MOTOR_ID = 56;
     public static final int INTAKE_ARM_FOLLOWER_MOTOR_ID = 57;
+    
+    public static final int INTAKE_ARM_MOTOR_CURRENT_LIMIT = 60;
+
+    public static final double INTAKE_ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final double INTAKE_ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+
+    public static final double ZERO_OFFSET = 0;
+    public static final double GRAVITY_COMPENSATION = 0.75;
+
+    public static final double P = 0.01;
+    public static final double I = 0;
+    public static final double D = 0;
+
+    public static final double INTAKE_ARM_DEFAULT_ROTATION = 55;
+    public static final double INTAKE_ARM_MIN_ROTATION = 20;
+    public static final double INTAKE_ARM_MAX_ROTATION = 80;
   }
 
   public static final class OperatorConstants {
