@@ -29,22 +29,70 @@ public final class Constants {
 
   public static final class FuelConstants {
     // Motor controller IDs for Fuel Mechanism motors
-    public static final int FEEDER_MOTOR_ID = 6;
-    public static final int INTAKE_LAUNCHER_MOTOR_ID = 5;
+    public static final int INTAKE_MOTOR_ID = 52;
+    public static final int UPPER_FEEDER_MOTOR_ID = 53;
+    public static final int LOWER_FEEDER_MOTER_ID = 54;
+    public static final int SHOOTER_MOTOR_ID = 55;
 
     // Current limit and nominal voltage for fuel mechanism motors.
     public static final int FEEDER_MOTOR_CURRENT_LIMIT = 60;
-    public static final int LAUNCHER_MOTOR_CURRENT_LIMIT = 60;
+    public static final int INTAKE_MOTOR_CURRENT_LIMIT = 60;
+    public static final int SHOOTER_MOTOR_CURRENT_LIMIT = 60;
 
     // Voltage values for various fuel operations. These values may need to be tuned
     // based on exact robot construction.
     // See the Software Guide for tuning information
-    public static final double INTAKING_FEEDER_VOLTAGE = -12;
-    public static final double INTAKING_INTAKE_VOLTAGE = 10;
-    public static final double LAUNCHING_FEEDER_VOLTAGE = 9;
-    public static final double LAUNCHING_LAUNCHER_VOLTAGE = 10.6;
-    public static final double SPIN_UP_FEEDER_VOLTAGE = -6;
+    public static final double INTAKE_VOLTAGE = 10;
+    public static final double FEEDER_VOLTAGE = 9;
+    public static final double SHOOTER_VOLTAGE = 10.6;
     public static final double SPIN_UP_SECONDS = 1;
+  }
+
+  public static final class IntakeArmConstants {
+    public static final int INTAKE_ARM_LEADER_MOTOR_ID = 56;
+    public static final int INTAKE_ARM_FOLLOWER_MOTOR_ID = 57;
+    
+    public static final int INTAKE_ARM_MOTOR_CURRENT_LIMIT = 60;
+
+    public static final double INTAKE_ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final double INTAKE_ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+
+    public static final double ZERO_OFFSET = 0;
+    public static final double GRAVITY_COMPENSATION = 0.75;
+
+    public static final double INTAKE_ARM_MAX_VELOCITY = 10;
+    public static final double INTAKE_ARM_MAX_ACCELERATION = 10;
+
+    public static final double P = 0.01;
+    public static final double I = 0;
+    public static final double D = 0;
+
+    public static final double INTAKE_ARM_DEFAULT_ANGLE = 55;
+    public static final double INTAKE_ARM_MIN_ANGLE = 20;
+    public static final double INTAKE_ARM_MAX_ANGLE = 80;
+  }
+
+  public static final class ElevatorConstants {
+    public static final int ELEVATOR_MOTOR_ID = 51;
+    
+    public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 60;
+
+    public static final double ELEVATOR_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final double ELEVATOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+
+    public static final double ZERO_OFFSET = 0;
+    public static final double GRAVITY_COMPENSATION = 0.75;
+
+    public static final double ELEVATOR_MAX_VELOCITY = 3.0;
+    public static final double ELEVATOR_MAX_ACCELERATION = 3.0;
+
+    public static final double P = 1.0;
+    public static final double I = 0;
+    public static final double D = 0.01;
+
+    public static final double ELEVATOR_DEFAULT_ROTATION = 1;
+    public static final double ELEVATOR_MIN_ROTATION = 0;
+    public static final double ELEVATOR_MAX_ROTATION = 10;
   }
 
   public static final class OperatorConstants {
