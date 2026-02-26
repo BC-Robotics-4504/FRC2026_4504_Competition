@@ -10,22 +10,22 @@ import frc.robot.subsystems.CANFuelSubsystem;
 import static frc.robot.Constants.FuelConstants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Intake extends Command {
+public class Feed extends Command {
   /** Creates a new Intake. */
 
   CANFuelSubsystem fuelSubsystem;
 
-  public Intake(CANFuelSubsystem fuelSystem) {
+  public Feed(CANFuelSubsystem fuelSystem) {
     addRequirements(fuelSystem);
     this.fuelSubsystem = fuelSystem;
   }
 
   // Called when the command is initially scheduled. Set the rollers to the
-  // appropriate values for intaking
+  // appropriate values for ejecting
   @Override
   public void initialize() {
     fuelSubsystem
-        .setIntakeRoller(SmartDashboard.getNumber("Intake roller value", INTAKE_VOLTAGE));
+        .setFeederRollers(SmartDashboard.getNumber("Feeder roller value", FEEDER_VOLTAGE));
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
@@ -37,7 +37,7 @@ public class Intake extends Command {
   // Called once the command ends or is interrupted. Stop the rollers
   @Override
   public void end(boolean interrupted) {
-    fuelSubsystem.setIntakeRoller(0);
+    fuelSubsystem.setFeederRollers(0);
   }
 
   // Returns true when the command should end.

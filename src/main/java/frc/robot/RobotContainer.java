@@ -15,14 +15,23 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+// import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.Discharge;
+import frc.robot.commands.Eject;
+import frc.robot.commands.ElevatorDown;
+import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.Intake;
+// import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
+import frc.robot.commands.LowerIntake;
+import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
+import frc.robot.subsystems.CANIntakeArmSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
 
 public class RobotContainer {
@@ -40,7 +49,8 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController driveController = new CommandXboxController(0);
+    private final CommandXboxController manipController = new CommandXboxController(1);
 
     public final CANSwerveSubsystem drivetrain = TunerConstants.createDrivetrain();
 
@@ -48,7 +58,11 @@ public class RobotContainer {
 
     public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
+    public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
+
     private final SendableChooser<Command> autoChooser  = new SendableChooser<>();
+
+    private boolean is_elevator_up = false;
 
     public RobotContainer() {
         configureBindings();
@@ -65,9 +79,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driveController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driveController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driveController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -78,25 +92,46 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        // driveController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // driveController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-driveController.getLeftY(), -driveController.getLeftX()))
         // ));
 
         // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // // Note that each routine should be run exactly once in a single log.
+        // driveController.back().and(driveController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driveController.back().and(driveController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driveController.start().and(driveController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driveController.start().and(driveController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        // Reset the field-centric heading on x press.
+        driveController.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        // TODO: shoot distance code (MAYBE center to hub)
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.a().whileTrue(new LaunchSequence(fuelSubsystem));
-        joystick.b().whileTrue(new Intake(fuelSubsystem));
+        // Binds for shooter and intake, etc.
+        manipController.y().whileTrue(new LaunchSequence(fuelSubsystem));
+        manipController.b().whileTrue(new Discharge(fuelSubsystem));
+        manipController.x().whileTrue(new Eject(fuelSubsystem));
+
+        manipController.leftTrigger().toggleOnTrue(new Intake(fuelSubsystem));
+
+        // Should toggle elevator position on press
+        manipController.rightTrigger().onTrue(
+            new ConditionalCommand(
+                new ElevatorUp(elevator),
+                new ElevatorDown(elevator), 
+                () -> {
+                    is_elevator_up = !is_elevator_up;
+                    return is_elevator_up;
+                }
+            )
+        );
+
+        manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
+        manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
     }
 
     public Command getAutonomousCommand() {
