@@ -60,20 +60,20 @@ public final class Constants {
     public static final double ZERO_OFFSET = 0;
     public static final double GRAVITY_COMPENSATION = 0.75;
 
-    public static final double INTAKE_ARM_MAX_VELOCITY = 10;
-    public static final double INTAKE_ARM_MAX_ACCELERATION = 10;
+    public static final double INTAKE_ARM_MAX_VELOCITY = 90;
+    public static final double INTAKE_ARM_MAX_ACCELERATION = 90;
 
-    public static final double P = 0.01;
+    public static final double P = 0.012;
     public static final double I = 0;
     public static final double D = 0;
 
     public static final double INTAKE_ARM_DEFAULT_ANGLE = 55;
-    public static final double INTAKE_ARM_MIN_ANGLE = 20;
-    public static final double INTAKE_ARM_MAX_ANGLE = 80;
+    public static final double INTAKE_ARM_MIN_ANGLE = 0;
+    public static final double INTAKE_ARM_MAX_ANGLE = 100;
 
     // May need to merge with min and max angles later
-    public static final double INTAKE_ARM_LOWER_ANGLE = 30;
-    public static final double INTAKE_ARM_UPPER_ANGLE = 50;
+    public static final double INTAKE_ARM_LOWER_ANGLE = 0;
+    public static final double INTAKE_ARM_UPPER_ANGLE = 90;
   }
 
   public static final class ElevatorConstants {
@@ -99,8 +99,8 @@ public final class Constants {
     public static final double ELEVATOR_MAX_ROTATION = 10;
 
     // May need to merge with min and max rotations later
-    public static final double ELEVATOR_LOWER_ROTATION = 1;
-    public static final double ELEVATOR_UPPER_ROTATION = 5;
+    public static final double ELEVATOR_LOWER_ROTATION = 0;
+    public static final double ELEVATOR_UPPER_ROTATION = 8;
   }
 
   public static final class OperatorConstants {

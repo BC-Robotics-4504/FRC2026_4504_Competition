@@ -93,11 +93,6 @@ public class CANElevatorSubsystem extends SubsystemBase {
 
         double elevatorMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderRotation)) 
                                       +*/ elevatorPIDController.calculate(encoderRotation, elevatorMotorSetpoint);
-        
-        System.out.print(elevatorMotorVoltage + " ");
-        System.out.print(elevatorMotorSetpoint + " ");
-        System.out.println(encoderRotation + " ");
-        System.out.println(isDone);
 
         elevatorMotor.setVoltage(elevatorMotorVoltage);
         isDone = Math.abs(encoderRotation - elevatorMotorSetpoint) < 0.01;

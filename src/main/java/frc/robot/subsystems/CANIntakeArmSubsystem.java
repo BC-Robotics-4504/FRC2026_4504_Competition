@@ -57,7 +57,7 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
         
         intakeFollowerMotorConfig
             .apply(intakeLeaderMotorConfig)
-            .follow(INTAKE_ARM_LEADER_MOTOR_ID);
+            .follow(INTAKE_ARM_LEADER_MOTOR_ID, true);
         
         intakeFollowerMotor.configure(
             intakeFollowerMotorConfig,
@@ -109,10 +109,6 @@ public class CANIntakeArmSubsystem extends SubsystemBase {
 
         double intakeLeaderMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 
                                       +*/ intakePIDController.calculate(encoderAngle, intakeLeaderMotorSetpoint);
-        
-        System.out.print(intakeLeaderMotorVoltage + " ");
-        System.out.print(intakeLeaderMotorSetpoint + " ");
-        System.out.println(encoderAngle);
 
         intakeLeaderMotor.setVoltage(intakeLeaderMotorVoltage);
         isDone = Math.abs(encoderAngle - intakeLeaderMotorSetpoint) < 1;
