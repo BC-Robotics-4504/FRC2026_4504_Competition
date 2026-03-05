@@ -25,7 +25,7 @@ public class Discharge extends Command {
   @Override
   public void initialize() {
     fuelSubsystem
-        .setFeederRollers(-1 * SmartDashboard.getNumber("Feeder roller value", FEEDER_VOLTAGE));
+        .setFeederRoller(-1 * SmartDashboard.getNumber("Feeder roller value", FEEDER_VOLTAGE));
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
@@ -37,7 +37,7 @@ public class Discharge extends Command {
   // Called once the command ends or is interrupted. Stop the rollers
   @Override
   public void end(boolean interrupted) {
-    fuelSubsystem.setFeederRollers(0);
+    fuelSubsystem.setFeederRoller(0);
   }
 
   // Returns true when the command should end.

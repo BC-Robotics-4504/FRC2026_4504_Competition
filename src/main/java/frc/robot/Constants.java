@@ -30,8 +30,8 @@ public final class Constants {
   public static final class FuelConstants {
     // Motor controller IDs for Fuel Mechanism motors
     public static final int INTAKE_MOTOR_ID = 52;
-    public static final int UPPER_FEEDER_MOTOR_ID = 53;
-    public static final int LOWER_FEEDER_MOTER_ID = 54;
+    public static final int FEEDER_MOTOR_ID = 53;
+    // Gap where follower feeder moter used to be
     public static final int SHOOTER_MOTOR_ID = 55;
 
     // Current limit and nominal voltage for fuel mechanism motors.
