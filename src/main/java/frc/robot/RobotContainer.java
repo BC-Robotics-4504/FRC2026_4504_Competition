@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -118,17 +120,30 @@ public class RobotContainer {
 
         manipController.leftTrigger().toggleOnTrue(new Intake(fuelSubsystem));
 
-        // Should toggle elevator position on press
+        /*Should toggle elevator position on press
         manipController.rightTrigger().onTrue(
             new ConditionalCommand(
                 new ElevatorUp(elevator),
                 new ElevatorDown(elevator), 
                 () -> {
                     is_elevator_up = !is_elevator_up;
-                    return is_elevator_up;
+                    return !is_elevator_up;
                 }
             )
         );
+        */
+    
+        //gb 20260306 is_elevator_up starts as false so it is down position initially, 
+       
+    BooleanSupplier elevatorStateSupplier = () -> is_elevator_up;
+
+        ConditionalCommand elevatorToggle = new ConditionalCommand(
+            new ElevatorUp(elevator),
+            new ElevatorDown(elevator),
+            elevatorStateSupplier
+        );
+        
+        manipController.rightTrigger().onTrue(elevatorToggle);
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));

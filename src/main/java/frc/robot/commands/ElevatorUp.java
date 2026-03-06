@@ -21,7 +21,7 @@ public class ElevatorUp extends Command {
   @Override
   public void initialize() {
     elevatorSubsystem.setDesiredRotation(ELEVATOR_UPPER_ROTATION);
-    System.out.println("ELEVATOR GOING UP!");
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ELEVATOR GOING UP!");
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
