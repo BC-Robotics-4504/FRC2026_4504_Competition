@@ -5,11 +5,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
+import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
 
 import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -26,9 +28,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
-import frc.robot.commands.Elevator;
-import frc.robot.commands.ElevatorDown;
-import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.Intake;
 // import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
@@ -40,6 +39,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.CANIntakeArmSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
+// import frc.robot.Constants
+import frc.robot.Constants.*;
 
 public class RobotContainer {
     // Changed 1.0 to 0.3
@@ -77,6 +78,16 @@ public class RobotContainer {
 
         autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
         autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
+
+        // TODO: make commands for Intake and Shooter
+        NamedCommands.registerCommand("Shoot", null);
+        NamedCommands.registerCommand("Intake Down", null);
+
+        SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
+        SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
+        SmartDashboard.putNumber("Eject voltage", FuelConstants.INTAKE_VOLTAGE / 2);
+        SmartDashboard.putNumber("Feeder voltage", FuelConstants.FEEDER_VOLTAGE);
+        SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
 
         SmartDashboard.putData("Auto Choices", autoChooser);
     }
@@ -158,11 +169,11 @@ public class RobotContainer {
      // Inside RobotContainer.java
 
 // COMMAND: Go to Top (8 rotations)
-Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(8.0));
+Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MAX_ROTATION));
 //Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_ROTATIONS));
 
 // COMMAND: Go to Bottom (0 rotations)
-Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(0.0));
+Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MIN_ROTATION));
 
 manipController.y().onTrue(elevatorTop);
 manipController.a().onTrue(elevatorBottom);

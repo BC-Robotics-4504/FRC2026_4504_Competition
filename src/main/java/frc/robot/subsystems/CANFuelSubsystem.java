@@ -47,14 +47,6 @@ public class CANFuelSubsystem extends SubsystemBase {
     shooterConfig.inverted(false);
     shooterConfig.smartCurrentLimit(SHOOTER_MOTOR_CURRENT_LIMIT);
     shooterRoller.configure(shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // put default values for various fuel operations onto the dashboard
-    // all commands using this subsystem pull values from the dashbaord to allow
-    // you to tune the values easily, and then replace the values in Constants.java
-    // with your new values. For more information, see the Software Guide.
-    SmartDashboard.putNumber("Feeder roller value", FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Intake roller value", INTAKE_VOLTAGE);
-    SmartDashboard.putNumber("Shooter roller value", SHOOTER_VOLTAGE);
   }
 
   // A method to set the voltage of the intake roller

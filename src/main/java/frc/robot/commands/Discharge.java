@@ -25,7 +25,7 @@ public class Discharge extends Command {
   @Override
   public void initialize() {
     fuelSubsystem
-        .setFeederRoller(-1 * SmartDashboard.getNumber("Feeder roller value", FEEDER_VOLTAGE));
+        .setFeederRoller(-1 * SmartDashboard.getNumber("Feeder Voltage", FEEDER_VOLTAGE));
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
