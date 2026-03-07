@@ -101,6 +101,7 @@ public final class Constants {
     // May need to merge with min and max rotations later
     public static final double ELEVATOR_LOWER_ROTATION = 0;
     public static final double ELEVATOR_UPPER_ROTATION = 8;
+    public static final double ELEVATOR_ROTATIONS = 8;
   }
 
   public static final class OperatorConstants {

@@ -17,12 +17,16 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
+import frc.robot.commands.Elevator;
 import frc.robot.commands.ElevatorDown;
 import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.Intake;
@@ -31,7 +35,8 @@ import frc.robot.commands.LaunchSequence;
 import frc.robot.commands.LowerIntake;
 import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CANElevatorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+// import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.CANIntakeArmSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
@@ -58,7 +63,8 @@ public class RobotContainer {
 
     public final CANFuelSubsystem fuelSubsystem = new CANFuelSubsystem();
 
-    public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
+    public final ElevatorSubsystem elevator = new ElevatorSubsystem();
+    // public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
     public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
@@ -135,15 +141,31 @@ public class RobotContainer {
     
         //gb 20260306 is_elevator_up starts as false so it is down position initially, 
        
-    BooleanSupplier elevatorStateSupplier = () -> is_elevator_up;
-
-        ConditionalCommand elevatorToggle = new ConditionalCommand(
-            new ElevatorUp(elevator),
-            new ElevatorDown(elevator),
-            elevatorStateSupplier
+        // add 0.1 debounce to rightTrigger to prevent multiple toggles from a single press, adjust as necessary based on testing
+    //    manipController.rightTrigger().debounce(0.1).onTrue(new Elevator(elevator, is_elevator_up));
+    /*
+        manipController.rightTrigger().debounce(0.1).onTrue(
+            new SequentialCommandGroup(  // Toggle the elevator state
+                new InstantCommand(() -> {
+                    is_elevator_up = !is_elevator_up;
+                    SmartDashboard.putBoolean("Is Elevator Up?", is_elevator_up);
+                    System.out.println(">>>>>>>>>>ELEVATOR TOGGLED! New value: " + is_elevator_up);
+                }),
+                new Elevator(elevator, is_elevator_up)
+            )
         );
-        
-        manipController.rightTrigger().onTrue(elevatorToggle);
+        */
+     // Inside RobotContainer.java
+
+// COMMAND: Go to Top (8 rotations)
+Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(8.0));
+//Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_ROTATIONS));
+
+// COMMAND: Go to Bottom (0 rotations)
+Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(0.0));
+
+manipController.rightTrigger().onTrue(elevatorTop);
+manipController.a().onTrue(elevatorBottom);
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
@@ -152,21 +174,5 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
 
-        // Simple drive forward auton
-        // final var idle = new SwerveRequest.Idle();
-        // return Commands.sequence(
-        //     // Reset our field centric heading to match the robot
-        //     // facing away from our alliance station wall (0 deg).
-        //     drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-        //     // Then slowly drive forward (away from us) for 5 seconds.
-        //     drivetrain.applyRequest(() ->
-        //         drive.withVelocityX(0.5)
-        //             .withVelocityY(0)
-        //             .withRotationalRate(0)
-        //     )
-        //     .withTimeout(5.0),
-        //     // Finally idle for the rest of auton
-        //     drivetrain.applyRequest(() -> idle)
-        // );
     }
 }
