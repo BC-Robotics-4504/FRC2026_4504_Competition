@@ -120,7 +120,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Binds for shooter and intake, etc.
-        manipController.y().whileTrue(new LaunchSequence(fuelSubsystem));
+        manipController.rightTrigger().whileTrue(new LaunchSequence(fuelSubsystem));
         manipController.b().whileTrue(new Discharge(fuelSubsystem));
         manipController.x().whileTrue(new Eject(fuelSubsystem));
 
@@ -164,7 +164,7 @@ Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(8.0));
 // COMMAND: Go to Bottom (0 rotations)
 Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(0.0));
 
-manipController.rightTrigger().onTrue(elevatorTop);
+manipController.y().onTrue(elevatorTop);
 manipController.a().onTrue(elevatorBottom);
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
