@@ -74,6 +74,7 @@ public class RobotContainer {
         autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
 
         // TODO: make commands for Intake and Shooter (FOR PATHPLANNER)
+        // THIS MOST LIKELY WILL NOT WORK RIGHT NOW!
         NamedCommands.registerCommand("Shoot", new LaunchSequence(fuelSubsystem));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm));
 
