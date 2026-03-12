@@ -17,12 +17,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
+import frc.robot.commands.ElevatorUp;
+import frc.robot.commands.ElevatorDown;
 import frc.robot.commands.Intake;
 // import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
@@ -162,16 +163,9 @@ public class RobotContainer {
         );
         */
         // Inside RobotContainer.java
-
-        // COMMAND: Go to Top (8 rotations)
-        Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MAX_ROTATION));
-        //Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_ROTATIONS));
-
-        // COMMAND: Go to Bottom (0 rotations)
-        Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MIN_ROTATION));
-
-        manipController.a().onTrue(elevatorTop);
-        manipController.y().onTrue(elevatorBottom);
+        
+        manipController.a().onTrue(new ElevatorUp(elevator));
+        manipController.y().onTrue(new ElevatorDown(elevator));
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
