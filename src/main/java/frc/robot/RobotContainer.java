@@ -67,8 +67,6 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser  = new SendableChooser<>();
 
-    private boolean is_elevator_up = false;
-
     public RobotContainer() {
         configureBindings();
 
