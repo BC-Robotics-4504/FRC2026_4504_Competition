@@ -163,8 +163,8 @@ public class RobotContainer {
         */
         // Inside RobotContainer.java
         
-        manipController.a().onTrue(new ElevatorUp(elevator));
-        manipController.y().onTrue(new ElevatorDown(elevator));
+        manipController.y().onTrue(new ElevatorUp(elevator));
+        manipController.a().onTrue(new ElevatorDown(elevator));
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
