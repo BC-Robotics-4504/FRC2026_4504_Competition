@@ -35,6 +35,7 @@ import frc.robot.commands.LowerIntake;
 import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 // import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.CANIntakeArmSubsystem;
@@ -67,7 +68,7 @@ public class RobotContainer {
     public final ElevatorSubsystem elevator = new ElevatorSubsystem();
     // public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
-    public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
+    public final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
 
     private final SendableChooser<Command> autoChooser  = new SendableChooser<>();
 
@@ -175,11 +176,14 @@ Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MAX_
 // COMMAND: Go to Bottom (0 rotations)
 Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MIN_ROTATION));
 
-manipController.y().onTrue(elevatorTop);
-manipController.a().onTrue(elevatorBottom);
+manipController.a().onTrue(elevatorTop);
+manipController.y().onTrue(elevatorBottom);
 
-        manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
-        manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
+Command intakeDown = Commands.runOnce(() -> intakeArm.goToPosition(IntakeArmConstants.INTAKE_ARM_LOWER_ANGLE));
+Command intakeUp = Commands.runOnce(() -> intakeArm.goToPosition(IntakeArmConstants.INTAKE_ARM_UPPER_ANGLE));
+
+manipController.leftBumper().onTrue(intakeDown);
+manipController.rightBumper().onTrue(intakeUp);
     }
 
     public Command getAutonomousCommand() {

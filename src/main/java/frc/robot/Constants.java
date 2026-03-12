@@ -42,7 +42,7 @@ public final class Constants {
     // Voltage values for various fuel operations. These values may need to be tuned
     // based on exact robot construction.
     // See the Software Guide for tuning information
-    public static final double INTAKE_VOLTAGE = 10;
+    public static final double INTAKE_VOLTAGE = 9;
     public static final double FEEDER_VOLTAGE = 9;
     public static final double SHOOTER_VOLTAGE = 10.6;
     public static final double SPIN_UP_SECONDS = 1;
