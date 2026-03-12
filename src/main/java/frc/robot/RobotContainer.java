@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
 import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
 
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -20,11 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
@@ -34,11 +29,10 @@ import frc.robot.commands.LaunchSequence;
 import frc.robot.commands.LowerIntake;
 import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.CANElevatorSubsystem;
+import frc.robot.subsystems.CANIntakeArmSubsystem;
 // import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
-import frc.robot.subsystems.CANIntakeArmSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
 // import frc.robot.Constants
 import frc.robot.Constants.*;
@@ -65,10 +59,10 @@ public class RobotContainer {
 
     public final CANFuelSubsystem fuelSubsystem = new CANFuelSubsystem();
 
-    public final ElevatorSubsystem elevator = new ElevatorSubsystem();
+    public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
     // public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
-    public final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
+    public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
     private final SendableChooser<Command> autoChooser  = new SendableChooser<>();
 
@@ -80,9 +74,9 @@ public class RobotContainer {
         autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
         autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
 
-        // TODO: make commands for Intake and Shooter
-        NamedCommands.registerCommand("Shoot", null);
-        NamedCommands.registerCommand("Intake Down", null);
+        // TODO: make commands for Intake and Shooter (FOR PATHPLANNER)
+        NamedCommands.registerCommand("Shoot", new LaunchSequence(fuelSubsystem));
+        NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm));
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -167,27 +161,23 @@ public class RobotContainer {
             )
         );
         */
-     // Inside RobotContainer.java
+        // Inside RobotContainer.java
 
-// COMMAND: Go to Top (8 rotations)
-Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MAX_ROTATION));
-//Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_ROTATIONS));
+        // COMMAND: Go to Top (8 rotations)
+        Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MAX_ROTATION));
+        //Command elevatorTop = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_ROTATIONS));
 
-// COMMAND: Go to Bottom (0 rotations)
-Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MIN_ROTATION));
+        // COMMAND: Go to Bottom (0 rotations)
+        Command elevatorBottom = Commands.runOnce(() -> elevator.goToPosition(ELEVATOR_MIN_ROTATION));
 
-manipController.a().onTrue(elevatorTop);
-manipController.y().onTrue(elevatorBottom);
+        manipController.a().onTrue(elevatorTop);
+        manipController.y().onTrue(elevatorBottom);
 
-Command intakeDown = Commands.runOnce(() -> intakeArm.goToPosition(IntakeArmConstants.INTAKE_ARM_LOWER_ANGLE));
-Command intakeUp = Commands.runOnce(() -> intakeArm.goToPosition(IntakeArmConstants.INTAKE_ARM_UPPER_ANGLE));
-
-manipController.leftBumper().onTrue(intakeDown);
-manipController.rightBumper().onTrue(intakeUp);
+        manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
+        manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
-
     }
 }

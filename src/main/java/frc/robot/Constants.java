@@ -69,11 +69,7 @@ public final class Constants {
 
     public static final double INTAKE_ARM_DEFAULT_ANGLE = 55;
     public static final double INTAKE_ARM_MIN_ANGLE = 0;
-    public static final double INTAKE_ARM_MAX_ANGLE = 100;
-
-    // May need to merge with min and max angles later
-    public static final double INTAKE_ARM_LOWER_ANGLE = 0;
-    public static final double INTAKE_ARM_UPPER_ANGLE = 90;
+    public static final double INTAKE_ARM_MAX_ANGLE = 90;
   }
 
   public static final class ElevatorConstants {
@@ -90,9 +86,9 @@ public final class Constants {
     public static final double ELEVATOR_MAX_VELOCITY = 3.0;
     public static final double ELEVATOR_MAX_ACCELERATION = 3.0;
 
-    public static final double P = 1.0;
+    public static final double P = 0.1;
     public static final double I = 0;
-    public static final double D = 0.01;
+    public static final double D = 0;
 
     public static final double ELEVATOR_DEFAULT_ROTATION = 1;
     public static final double ELEVATOR_MIN_ROTATION = 0;

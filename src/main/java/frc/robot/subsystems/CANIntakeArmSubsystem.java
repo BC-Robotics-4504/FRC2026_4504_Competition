@@ -1,116 +1,72 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
 import static frc.robot.Constants.IntakeArmConstants.*;
 
 public class CANIntakeArmSubsystem extends SubsystemBase {
-    private final SparkMax intakeLeaderMotor;
-    private final SparkMax intakeFollowerMotor;
-    private final RelativeEncoder intakeEncoder;
+    private final SparkMax intakeArmLeaderMotor = new SparkMax(INTAKE_ARM_LEADER_MOTOR_ID, MotorType.kBrushless);
+    private final SparkMax intakeArmFollowerMotor = new SparkMax(INTAKE_ARM_FOLLOWER_MOTOR_ID, MotorType.kBrushless);
+
+    private final SparkClosedLoopController leaderPidController = intakeArmLeaderMotor.getClosedLoopController();
 
     // Profiled to ensure smooth movement
-    private final ProfiledPIDController intakePIDController;
+    //private final ProfiledPIDController elevatorPIDController;
 
-    private NetworkTableEntry nt_angle, nt_desiredAngle;
-    private boolean isDone = false;
+   // private NetworkTableEntry nt_rotation, nt_desiredRotation;
+   // private boolean isDone = false;
 
     public CANIntakeArmSubsystem() {
-        intakeLeaderMotor = new SparkMax(INTAKE_ARM_LEADER_MOTOR_ID, MotorType.kBrushless);
-        intakeFollowerMotor = new SparkMax(INTAKE_ARM_FOLLOWER_MOTOR_ID, MotorType.kBrushless);
-        intakeEncoder = intakeLeaderMotor.getEncoder();
-
-        SparkMaxConfig intakeLeaderMotorConfig = new SparkMaxConfig();
-        SparkMaxConfig intakeFollowerMotorConfig = new SparkMaxConfig();
-
-        intakeLeaderMotorConfig
-            .smartCurrentLimit(INTAKE_ARM_MOTOR_CURRENT_LIMIT)
-            .idleMode(IdleMode.kBrake)
-            .inverted(false);
-
-        intakeLeaderMotorConfig.encoder
-            .positionConversionFactor(INTAKE_ARM_ENCODER_POSITION_CONVERSION_FACTOR)
-            .velocityConversionFactor(INTAKE_ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
-
-        intakeLeaderMotorConfig.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .p(P).i(I).d(D);
-
-        intakeLeaderMotor.configure(
-            intakeLeaderMotorConfig,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
-        );
-        
-        intakeFollowerMotorConfig
-            .apply(intakeLeaderMotorConfig)
-            .follow(INTAKE_ARM_LEADER_MOTOR_ID, true);
-        
-        intakeFollowerMotor.configure(
-            intakeFollowerMotorConfig,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
-        );
-
-        TrapezoidProfile.Constraints intakePIDConstraints;
-        // Set both max velocity and max acceleration to 10 deg/sec
-        intakePIDConstraints = new TrapezoidProfile.Constraints(
-            INTAKE_ARM_MAX_VELOCITY,
-            INTAKE_ARM_MAX_ACCELERATION
-        );
-        
-        // Temp PID values, will probably need tuning
-        intakePIDController = new ProfiledPIDController(P, I, D, intakePIDConstraints);
-
-        nt_angle = SmartDashboard.getEntry("Intake Angle");
-        nt_desiredAngle = SmartDashboard.getEntry("Intake Desired Angle");
-        nt_desiredAngle.setDefaultDouble(INTAKE_ARM_DEFAULT_ANGLE);
-    }
     
-    public double getEncoderAngle() {
-        // Converting from rotations to degrees
-        return (intakeEncoder.getPosition()*360)%360 - ZERO_OFFSET;
-    }
+        SparkMaxConfig intakeArmLeaderMotorConfig = new SparkMaxConfig();
+        intakeArmLeaderMotorConfig
+        .smartCurrentLimit(INTAKE_ARM_MOTOR_CURRENT_LIMIT)
+        .idleMode(IdleMode.kBrake)
+        .inverted(true);
 
-    public void setDesiredAngle(double degrees) {
-        nt_desiredAngle.setNumber(degrees);
-        isDone = false;
-    }
+      // --- PID COEFFICIENTS ---
+         // Start with a small P (like 0.1) and increase until it reaches the target
+        intakeArmLeaderMotorConfig.closedLoop.p(P); 
+        intakeArmLeaderMotorConfig.closedLoop.i(I);
+        intakeArmLeaderMotorConfig.closedLoop.d(D);
+        intakeArmLeaderMotorConfig.closedLoop.outputRange(-0.5, 0.5); // Limit max speed to 50% for safety
 
-    public boolean isAtDesiredAngle() {
-        return isDone;
-    }
+        intakeArmLeaderMotor.configure(intakeArmLeaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        SparkMaxConfig intakeArmFollowerMotorConfig = new SparkMaxConfig();
+        intakeArmFollowerMotorConfig
+        .apply(intakeArmLeaderMotorConfig)
+        .follow(INTAKE_ARM_LEADER_MOTOR_ID, true);
+
+        intakeArmFollowerMotor.configure(intakeArmFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    };
+  
+
+    public void goToPosition(double degrees) {
+    // This tells the hardware to handle the movement
+    double rotations = (degrees / 360.0) * 50;
+
+    leaderPidController.setReference(rotations, SparkMax.ControlType.kPosition);
+    System.out.println("INTAKE ARM MOVING! " + rotations);
+  }
+
+  public void stop() {
+    intakeArmLeaderMotor.set(0);
+  }
+
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        final double encoderAngle = getEncoderAngle();
-
-        nt_angle.setDouble(encoderAngle);
-
-        double intakeLeaderMotorSetpoint = MathUtil.clamp(
-            nt_desiredAngle.getDouble(INTAKE_ARM_DEFAULT_ANGLE),
-            INTAKE_ARM_MIN_ANGLE,
-            INTAKE_ARM_MAX_ANGLE
-        );
-
-        double intakeLeaderMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderAngle)) 
-                                      +*/ intakePIDController.calculate(encoderAngle, intakeLeaderMotorSetpoint);
-
-        intakeLeaderMotor.setVoltage(intakeLeaderMotorVoltage);
-        isDone = Math.abs(encoderAngle - intakeLeaderMotorSetpoint) < 1;
+    
     }
 }

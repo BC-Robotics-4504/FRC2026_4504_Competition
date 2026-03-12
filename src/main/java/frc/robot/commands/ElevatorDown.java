@@ -1,26 +1,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CANIntakeArmSubsystem;
+import frc.robot.subsystems.CANElevatorSubsystem;
 
-import static frc.robot.Constants.IntakeArmConstants.*;
+import static frc.robot.Constants.ElevatorConstants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class LowerIntake extends Command {
+public class ElevatorDown extends Command {
   /** Creates a new Intake. */
 
-  CANIntakeArmSubsystem armSubsystem;
+  CANElevatorSubsystem elevatorSubsystem;
 
-  public LowerIntake(CANIntakeArmSubsystem armSystem) {
-    addRequirements(armSystem);
-    this.armSubsystem = armSystem;
+  public ElevatorDown(CANElevatorSubsystem elevatorSystem) {
+    addRequirements(elevatorSystem);
+    this.elevatorSubsystem = elevatorSystem;
   }
 
   // Called when the command is initially scheduled. Set the rollers to the
   // appropriate values for intaking
   @Override
   public void initialize() {
-    armSubsystem.goToPosition(INTAKE_ARM_MIN_ANGLE);
+    elevatorSubsystem.goToPosition(ELEVATOR_MIN_ROTATION);
   }
 
   // Called every time the scheduler runs while the command is scheduled. This

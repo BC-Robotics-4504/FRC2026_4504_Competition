@@ -1,0 +1,100 @@
+package frc.robot.subsystems;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
+import static frc.robot.Constants.ElevatorConstants.*;
+
+public class CANElevatorSubsystem extends SubsystemBase {
+    private final SparkMax elevatorMotor;
+    private final RelativeEncoder elevatorEncoder;
+
+    // Profiled to ensure smooth movement
+    private final ProfiledPIDController elevatorPIDController;
+
+    private NetworkTableEntry nt_rotation, nt_desiredRotation;
+    private boolean isDone = false;
+
+    public CANElevatorSubsystem() {
+        elevatorMotor = new SparkMax(ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+        elevatorEncoder = elevatorMotor.getEncoder();
+
+        SparkMaxConfig elevatorMotorConfig = new SparkMaxConfig();
+
+        elevatorMotorConfig
+        .smartCurrentLimit(ELEVATOR_MOTOR_CURRENT_LIMIT)
+        .idleMode(IdleMode.kBrake)
+        .inverted(false);
+
+        elevatorMotorConfig.encoder
+        .positionConversionFactor(ELEVATOR_ENCODER_POSITION_CONVERSION_FACTOR)
+        .velocityConversionFactor(ELEVATOR_ENCODER_VELOCITY_CONVERSION_FACTOR);
+
+        elevatorMotorConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .p(P).i(I).d(D);
+
+        elevatorMotor.configure(
+            elevatorMotorConfig,
+            ResetMode.kResetSafeParameters,
+            PersistMode.kPersistParameters
+        );
+
+        TrapezoidProfile.Constraints elevatorPIDConstraints;
+        // Set both max velocity and max acceleration to 3.0 rotations/sec
+        elevatorPIDConstraints = new TrapezoidProfile.Constraints(ELEVATOR_MAX_VELOCITY, ELEVATOR_MAX_ACCELERATION);
+        // Temp PID values, will probably need tuning
+        elevatorPIDController = new ProfiledPIDController(P, I, D, elevatorPIDConstraints);
+
+        nt_rotation = SmartDashboard.getEntry("Elevator Rotation");
+        nt_desiredRotation = SmartDashboard.getEntry("Elevator Desired Rotation");
+        nt_desiredRotation.setDefaultDouble(ELEVATOR_DEFAULT_ROTATION);
+    }
+    
+    public double getEncoderRotation() {
+        return elevatorEncoder.getPosition() - ZERO_OFFSET;
+    }
+
+    public void setDesiredRotation(double rotations) {
+        nt_desiredRotation.setNumber(rotations);
+        isDone = false;
+    }
+
+    public boolean isAtDesiredRotation() {
+        return isDone;
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        final double encoderRotation = getEncoderRotation();
+
+        nt_rotation.setDouble(encoderRotation);
+
+        double elevatorMotorSetpoint = MathUtil.clamp(
+            nt_desiredRotation.getDouble(ELEVATOR_DEFAULT_ROTATION), 
+            ELEVATOR_MIN_ROTATION, 
+            ELEVATOR_MAX_ROTATION
+        );
+
+        double elevatorMotorVoltage = /*GRAVITY_COMPENSATION * Math.cos(Math.toRadians(encoderRotation)) 
+                                      +*/ elevatorPIDController.calculate(encoderRotation, elevatorMotorSetpoint);
+
+        elevatorMotor.setVoltage(elevatorMotorVoltage);
+        isDone = Math.abs(encoderRotation - elevatorMotorSetpoint) < 0.01;
+    }
+}

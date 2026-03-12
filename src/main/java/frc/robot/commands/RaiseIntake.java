@@ -20,7 +20,7 @@ public class RaiseIntake extends Command {
   // appropriate values for intaking
   @Override
   public void initialize() {
-    armSubsystem.setDesiredAngle(INTAKE_ARM_UPPER_ANGLE);
+    armSubsystem.goToPosition(INTAKE_ARM_MAX_ANGLE);
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
