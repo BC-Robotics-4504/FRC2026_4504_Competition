@@ -39,7 +39,7 @@ public class CANFuelSubsystem extends SubsystemBase {
 
     // create the configuration for the intake roller, set a current limit, set the motor to inverted
     SparkMaxConfig intakeConfig = new SparkMaxConfig();
-    intakeConfig.inverted(true);
+    intakeConfig.inverted(false);
     intakeConfig.smartCurrentLimit(INTAKE_MOTOR_CURRENT_LIMIT);
     intakeRoller.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

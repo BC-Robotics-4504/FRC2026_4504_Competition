@@ -20,7 +20,7 @@ public class LowerIntake extends Command {
   // appropriate values for intaking
   @Override
   public void initialize() {
-    armSubsystem.goToPosition(INTAKE_ARM_MIN_ANGLE);
+    armSubsystem.goToPosition(INTAKE_ARM_MAX_ANGLE);
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
