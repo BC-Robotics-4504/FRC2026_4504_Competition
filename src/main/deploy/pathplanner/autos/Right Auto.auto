@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Ready to Shoot"
+            "pathName": "Right Ready to Shoot"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Crossing Ramp"
+            "pathName": "Right Crossing Ramp"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Ready to Intake"
+            "pathName": "Right Ready to Intake"
           }
         },
         {
@@ -41,7 +41,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake"
+                  "pathName": "Right Intake"
                 }
               },
               {
@@ -56,7 +56,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Return"
+            "pathName": "Right Return"
           }
         },
         {

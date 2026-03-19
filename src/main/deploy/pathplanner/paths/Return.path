@@ -3,53 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.846747503566333,
-        "y": 4.507261055634808
+        "x": 5.954,
+        "y": 5.555
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.86772744499309,
-        "y": 5.038549897308678
+        "x": 4.954,
+        "y": 5.555
       },
       "isLocked": false,
-      "linkedName": "Right RTIP"
+      "linkedName": "Intake Down Position"
     },
     {
       "anchor": {
-        "x": 4.634236804564908,
-        "y": 5.412967189728959
+        "x": 2.6,
+        "y": 6.6
       },
       "prevControl": {
-        "x": 5.984491447835543,
-        "y": 5.380299738682089
-      },
-      "nextControl": {
-        "x": 3.0298430813124115,
-        "y": 5.4517831669044226
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.654621968616262,
-        "y": 6.642
-      },
-      "prevControl": {
-        "x": 2.9522111269614832,
-        "y": 6.189286733238232
+        "x": 2.6,
+        "y": 5.3
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot Position"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.4562899786780362,
-      "rotationDegrees": -45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -69,7 +48,7 @@
   "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -43.12212255271454
   },
   "useDefaultConstraints": true
 }

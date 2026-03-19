@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Ready to Shoot"
+            "pathName": "Center Ready to Shoot"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Crossing Ramp"
+            "pathName": "Center Crossing Ramp"
           }
         },
         {
@@ -29,19 +29,13 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Ready to Intake"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Intake"
+                  "pathName": "Center Intake"
                 }
               },
               {
@@ -56,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Return"
+            "pathName": "Center Return"
           }
         },
         {
