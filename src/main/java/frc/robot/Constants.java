@@ -42,10 +42,10 @@ public final class Constants {
     // Voltage values for various fuel operations. These values may need to be tuned
     // based on exact robot construction.
     // See the Software Guide for tuning information
-    public static final double INTAKE_VOLTAGE = 5; //9
+    public static final double INTAKE_VOLTAGE = 4.5; //9
     public static final double FEEDER_VOLTAGE = 5; //9
-    public static final double SHOOTER_VOLTAGE = 7; //10.6
-    public static final double SPIN_UP_SECONDS = 1;
+    public static final double SHOOTER_VOLTAGE = 7.5; //10.6
+    public static final double SPIN_UP_SECONDS = 0.75;
   }
 
   public static final class IntakeArmConstants {
@@ -63,7 +63,7 @@ public final class Constants {
     public static final double INTAKE_ARM_MAX_VELOCITY = 90;
     public static final double INTAKE_ARM_MAX_ACCELERATION = 90;
 
-    public static final double P = 0.03;
+    public static final double P = 0.05;
     public static final double I = 0;
     public static final double D = 0;
 
@@ -90,7 +90,7 @@ public final class Constants {
     public static final double I = 0;
     public static final double D = 0;
 
-    public static final double ELEVATOR_DEFAULT_ROTATION = 1;
+    public static final double ELEVATOR_DEFAULT_ROTATION = 0;
     public static final double ELEVATOR_MIN_ROTATION = 0;
     public static final double ELEVATOR_MAX_ROTATION = 100;
   }

@@ -30,7 +30,7 @@ public class CANElevatorSubsystem extends SubsystemBase {
         elevatorMotorConfig
         .smartCurrentLimit(ELEVATOR_MOTOR_CURRENT_LIMIT)
         .idleMode(IdleMode.kBrake)
-        .inverted(true);
+        .inverted(false);
 
       // --- PID COEFFICIENTS ---
          // Start with a small P (like 0.1) and increase until it reaches the target
@@ -45,8 +45,7 @@ public class CANElevatorSubsystem extends SubsystemBase {
     public void goToPosition(double rotations) {
     // This tells the hardware to handle the movement
     pidController.setReference(rotations, SparkMax.ControlType.kPosition);
-     System.out.println("ELEVATOR MOVING! " + rotations);
-     
+    System.out.println("ELEVATOR MOVING! " + rotations);
   }
 
   public void stop() {

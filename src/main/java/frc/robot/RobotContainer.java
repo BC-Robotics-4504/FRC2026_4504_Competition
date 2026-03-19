@@ -61,7 +61,6 @@ public class RobotContainer {
     public final CANFuelSubsystem fuelSubsystem = new CANFuelSubsystem();
 
     public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
-    // public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
     public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
@@ -82,7 +81,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
         SmartDashboard.putNumber("Eject voltage", FuelConstants.INTAKE_VOLTAGE / 2);
         SmartDashboard.putNumber("Feeder voltage", FuelConstants.FEEDER_VOLTAGE);
-        SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
+        // SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
 
         SmartDashboard.putData("Auto Choices", autoChooser);
     }
@@ -126,11 +125,17 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Binds for shooter and intake, etc.
-        manipController.rightTrigger().whileTrue(new LaunchSequence(fuelSubsystem));
         manipController.b().whileTrue(new Discharge(fuelSubsystem));
         manipController.x().whileTrue(new Eject(fuelSubsystem));
+        
+        manipController.y().onTrue(new ElevatorUp(elevator));
+        manipController.a().onTrue(new ElevatorDown(elevator));
 
         manipController.leftTrigger().toggleOnTrue(new Intake(fuelSubsystem));
+        manipController.rightTrigger().whileTrue(new LaunchSequence(fuelSubsystem));
+
+        manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
+        manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
 
         /*Should toggle elevator position on press
         manipController.rightTrigger().onTrue(
@@ -162,12 +167,6 @@ public class RobotContainer {
         );
         */
         // Inside RobotContainer.java
-        
-        manipController.y().onTrue(new ElevatorUp(elevator));
-        manipController.a().onTrue(new ElevatorDown(elevator));
-
-        manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
-        manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
     }
 
     public Command getAutonomousCommand() {

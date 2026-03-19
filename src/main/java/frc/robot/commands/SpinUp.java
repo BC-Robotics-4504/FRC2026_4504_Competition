@@ -26,7 +26,7 @@ public class SpinUp extends Command {
   public void initialize() {
     fuelSubsystem
         .setShooterRoller(
-            SmartDashboard.getNumber("Shooter Voltage", SHOOTER_VOLTAGE));
+            SmartDashboard.getNumber("Shooter voltage", SHOOTER_VOLTAGE));
   }
 
   // Called every time the scheduler runs while the command is scheduled. This
