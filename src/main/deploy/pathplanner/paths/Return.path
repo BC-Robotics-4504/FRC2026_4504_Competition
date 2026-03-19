@@ -12,7 +12,7 @@
         "y": 5.038549897308678
       },
       "isLocked": false,
-      "linkedName": "End Intake Position"
+      "linkedName": "Right RTIP"
     },
     {
       "anchor": {
@@ -20,24 +20,24 @@
         "y": 5.412967189728959
       },
       "prevControl": {
-        "x": 5.979857346647646,
-        "y": 5.296519258202568
+        "x": 5.984491447835543,
+        "y": 5.380299738682089
       },
       "nextControl": {
-        "x": 4.2654876947829115,
-        "y": 5.44487817038317
+        "x": 3.0298430813124115,
+        "y": 5.4517831669044226
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.758131241084165,
-        "y": 5.1930099857346645
+        "x": 2.654621968616262,
+        "y": 6.642
       },
       "prevControl": {
-        "x": 3.2859450728022903,
-        "y": 5.248235200155309
+        "x": 2.9522111269614832,
+        "y": 6.189286733238232
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,10 +63,10 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -45.0
+    "rotation": -52.71206671853163
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

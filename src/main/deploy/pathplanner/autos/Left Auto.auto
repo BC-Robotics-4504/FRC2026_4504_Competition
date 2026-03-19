@@ -13,19 +13,32 @@
         {
           "type": "named",
           "data": {
-            "name": "Launch Sequence"
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Run Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Sequence"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Crossing Ramp"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
           }
         },
         {
@@ -57,6 +70,18 @@
           "type": "path",
           "data": {
             "pathName": "Return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Sequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
           }
         }
       ]
