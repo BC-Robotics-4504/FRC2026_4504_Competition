@@ -64,7 +64,7 @@ public class RobotContainer {
 
     public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
-    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+    private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
         NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(3));
@@ -76,6 +76,8 @@ public class RobotContainer {
         // autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
         // autoChooser.addOption("Left Auto", AutoBuilder.buildAuto("Left Auto"));
         // autoChooser.addOption("Right Auto", AutoBuilder.buildAuto("Right Auto"));
+
+        autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
