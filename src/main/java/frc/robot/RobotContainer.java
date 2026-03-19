@@ -40,7 +40,7 @@ import frc.robot.Constants.*;
 
 public class RobotContainer {
     // Changed 1.0 to 0.3
-    private double MaxSpeed = 0.3 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.5 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -67,15 +67,14 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser  = new SendableChooser<>();
 
     public RobotContainer() {
-        configureBindings();
+        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
+        NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
+        NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
+        NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(3));
 
-        autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
-        autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
-
-        // TODO: make commands for Intake and Shooter (FOR PATHPLANNER)
-        // THIS MOST LIKELY WILL NOT WORK RIGHT NOW!
-        NamedCommands.registerCommand("Shoot", new LaunchSequence(fuelSubsystem));
-        NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm));
+        // autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
+        // autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
+        autoChooser.addOption("Main Auto", AutoBuilder.buildAuto("Main Auto"));
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -84,6 +83,8 @@ public class RobotContainer {
         // SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
 
         SmartDashboard.putData("Auto Choices", autoChooser);
+
+        configureBindings();
     }
 
     private void configureBindings() {
@@ -125,8 +126,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Binds for shooter and intake, etc.
-        manipController.b().whileTrue(new Discharge(fuelSubsystem));
-        manipController.x().whileTrue(new Eject(fuelSubsystem));
+        manipController.x().whileTrue(new Discharge(fuelSubsystem));
+        manipController.b().whileTrue(new Eject(fuelSubsystem));
         
         manipController.y().onTrue(new ElevatorUp(elevator));
         manipController.a().onTrue(new ElevatorDown(elevator));

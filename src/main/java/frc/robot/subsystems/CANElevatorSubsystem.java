@@ -37,7 +37,7 @@ public class CANElevatorSubsystem extends SubsystemBase {
         elevatorMotorConfig.closedLoop.p(P); 
         elevatorMotorConfig.closedLoop.i(I);
         elevatorMotorConfig.closedLoop.d(D);
-        elevatorMotorConfig.closedLoop.outputRange(-0.5, 0.5); // Limit max speed to 50% for safety
+        elevatorMotorConfig.closedLoop.outputRange(-0.8, 0.8); // Limit max speed to 50% for safety
 
         elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     };
