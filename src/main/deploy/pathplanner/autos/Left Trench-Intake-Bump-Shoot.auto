@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Ready to Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Sequence"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Crossing Ramp"
+            "pathName": "Left Start to Left Intake Start"
           }
         },
         {
@@ -35,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center Intake"
+                  "pathName": "Left Intake Start to Left Intake End"
                 }
               },
               {
@@ -50,19 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Return"
+            "pathName": "Left Intake End to Left Shoot Over Bump"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Launch Sequence"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
           }
         }
       ]

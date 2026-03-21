@@ -67,7 +67,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(3));
+        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));

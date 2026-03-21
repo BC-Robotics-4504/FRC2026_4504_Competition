@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.953980028530669,
-        "y": 2.6829101283880177
+        "x": 7.79,
+        "y": 7.431
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.953980028530669,
-        "y": 1.6829101283880177
+        "x": 7.79,
+        "y": 6.431000000000001
       },
       "isLocked": false,
-      "linkedName": "Right Intake Down Position"
+      "linkedName": "Left Intake Start"
     },
     {
       "anchor": {
-        "x": 8.748730385164052,
-        "y": 0.6256633380884444
+        "x": 7.79,
+        "y": 4.86
       },
       "prevControl": {
-        "x": 7.748730385164052,
-        "y": 0.6256633380884445
+        "x": 7.79,
+        "y": 5.86
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Ready to Intake Position"
+      "linkedName": "Left Intake End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Right",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 44.47436539354237
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

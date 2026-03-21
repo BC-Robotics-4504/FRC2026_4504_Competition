@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.79,
+        "y": 4.86
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.79,
+        "y": 4.86
+      },
+      "isLocked": false,
+      "linkedName": "Left Intake End"
+    },
+    {
+      "anchor": {
+        "x": 5.178,
+        "y": 7.4305
+      },
+      "prevControl": {
+        "x": 8.178,
+        "y": 7.4305
+      },
+      "nextControl": {
+        "x": 4.178,
+        "y": 7.4305
+      },
+      "isLocked": false,
+      "linkedName": "Left Trench End"
+    },
+    {
+      "anchor": {
+        "x": 4.03,
+        "y": 7.431
+      },
+      "prevControl": {
+        "x": 5.03,
+        "y": 7.431
+      },
+      "nextControl": {
+        "x": 3.0300000000000002,
+        "y": 7.431
+      },
+      "isLocked": false,
+      "linkedName": "Left Trench Start"
+    },
+    {
+      "anchor": {
+        "x": 3.3,
+        "y": 6.603323823109844
+      },
+      "prevControl": {
+        "x": 3.3,
+        "y": 6.853323823109844
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -63.02682348920846
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
