@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.cameraserver.CameraServer;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
@@ -72,12 +73,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));
 
-        // autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
-        // autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
-        // autoChooser.addOption("Left Auto", AutoBuilder.buildAuto("Left Auto"));
-        // autoChooser.addOption("Right Auto", AutoBuilder.buildAuto("Right Auto"));
-
         autoChooser = AutoBuilder.buildAutoChooser();
+
+        CameraServer.startAutomaticCapture(0);
+        CameraServer.startAutomaticCapture(1);
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -86,6 +85,7 @@ public class RobotContainer {
         // SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
 
         SmartDashboard.putData("Auto Choices", autoChooser);
+        SmartDashboard.updateValues();
 
         configureBindings();
     }
