@@ -5,8 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
-import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
+// import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
+// import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -65,15 +65,21 @@ public class RobotContainer {
 
     public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
-    private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     public RobotContainer() {
         NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));
+        NamedCommands.registerCommand("Elevator Down", new ElevatorDown(elevator).asProxy().withTimeout(10));
+        NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(10));
 
-        autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // buildAutoAndAddToChooser("Center Backup-Shoot");
+        buildAutoAndAddToChooser("Center Backup-Shoot-Climb");
+        buildAutoAndAddToChooser("Left-Backup-Shoot-Climb");
+        buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
 
         CameraServer.startAutomaticCapture(0);
         CameraServer.startAutomaticCapture(1);
@@ -85,7 +91,6 @@ public class RobotContainer {
         // SmartDashboard.putNumber("Reverse Feeder voltage", FuelConstants.FEEDER_VOLTAGE / 2);
 
         SmartDashboard.putData("Auto Choices", autoChooser);
-        SmartDashboard.updateValues();
 
         configureBindings();
     }
@@ -175,5 +180,10 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    // utility function
+    private void buildAutoAndAddToChooser(String autoName) {
+        autoChooser.addOption(autoName, AutoBuilder.buildAuto(autoName));
     }
 }

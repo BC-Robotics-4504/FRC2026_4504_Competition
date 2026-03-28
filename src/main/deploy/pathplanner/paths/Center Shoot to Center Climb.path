@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 0.639
+        "x": 2.5748837209302327,
+        "y": 4.035
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5,
-        "y": 0.6390000000000002
+        "x": 1.5817424573428265,
+        "y": 3.8452070451088427
       },
       "isLocked": false,
-      "linkedName": "Right Start"
+      "linkedName": "Center Shoot"
     },
     {
       "anchor": {
-        "x": 7.79,
-        "y": 0.6395
+        "x": 1.4066547406082288,
+        "y": 3.8321824686940964
       },
       "prevControl": {
-        "x": 6.79,
-        "y": 0.6395000000000001
+        "x": 2.11618747387511,
+        "y": 3.948761036904716
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Intake Start"
+      "linkedName": "Center Climb"
     }
   ],
   "rotationTargets": [],
