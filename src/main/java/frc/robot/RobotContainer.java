@@ -72,8 +72,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));
-        NamedCommands.registerCommand("Elevator Down", new ElevatorDown(elevator).asProxy().withTimeout(10));
-        NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(10));
+        NamedCommands.registerCommand("Elevator Down", new ElevatorDown(elevator).asProxy().withTimeout(6));
+        NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(6));
 
         // autoChooser = AutoBuilder.buildAutoChooser();
         // buildAutoAndAddToChooser("Center Backup-Shoot");
