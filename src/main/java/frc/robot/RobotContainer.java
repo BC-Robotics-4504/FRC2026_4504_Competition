@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.*;
 // import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
 // import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
 
+import java.util.function.Function;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -76,13 +78,17 @@ public class RobotContainer {
         NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(6));
 
         // autoChooser = AutoBuilder.buildAutoChooser();
-        // buildAutoAndAddToChooser("Center Backup-Shoot");
+        // Manually Add Autos
+        buildAutoAndAddToChooser("Center Backup-Shoot");
+        buildAutoAndAddToChooser("Left Trench-Intake-Trench-Shoot");
+        buildAutoAndAddToChooser("Right Trench-Intake-Trench-Shoot");
         buildAutoAndAddToChooser("Center Backup-Shoot-Climb");
         buildAutoAndAddToChooser("Left-Backup-Shoot-Climb");
         buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
+        autoChooser.setDefaultOption("None", null);
 
-        CameraServer.startAutomaticCapture(0);
-        CameraServer.startAutomaticCapture(1);
+        CameraServer.startAutomaticCapture("Front Camera", 0);
+        CameraServer.startAutomaticCapture("Back Camera", 1);
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -129,7 +135,17 @@ public class RobotContainer {
         // Reset the field-centric heading on x press.
         driveController.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        // TODO: shoot distance code (MAYBE center to hub)
+        Command elevatorManualUp = elevator.runEnd(
+            () -> elevator.setElevatorMotor(11.0),
+            () -> elevator.stop()
+        );
+        Command elevatorManualDown = elevator.runEnd(
+            () -> elevator.setElevatorMotor(-11.0),
+            () -> elevator.stop()
+        );
+
+        driveController.rightBumper().and(driveController.y()).whileTrue(elevatorManualUp);
+        driveController.rightBumper().and(driveController.a()).whileTrue(elevatorManualDown);
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -145,6 +161,8 @@ public class RobotContainer {
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
+        
+        // manipController.rightBumper().and(driveController.leftBumper()).onTrue();
 
         /*Should toggle elevator position on press
         manipController.rightTrigger().onTrue(

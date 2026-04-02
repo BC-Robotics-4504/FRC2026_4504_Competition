@@ -48,6 +48,10 @@ public class CANElevatorSubsystem extends SubsystemBase {
     System.out.println("ELEVATOR MOVING! " + rotations);
   }
 
+  public void setElevatorMotor(double voltage) {
+    elevatorMotor.setVoltage(voltage);
+  }
+
   public void stop() {
     elevatorMotor.set(0);
   }
