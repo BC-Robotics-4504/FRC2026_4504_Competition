@@ -5,8 +5,10 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
-import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
+// import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MAX_ROTATION;
+// import static frc.robot.Constants.ElevatorConstants.ELEVATOR_MIN_ROTATION;
+
+import java.util.function.Function;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.cameraserver.CameraServer;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
@@ -64,20 +67,28 @@ public class RobotContainer {
 
     public final CANIntakeArmSubsystem intakeArm = new CANIntakeArmSubsystem();
 
-    private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     public RobotContainer() {
         NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));
+        NamedCommands.registerCommand("Elevator Down", new ElevatorDown(elevator).asProxy().withTimeout(6));
+        NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(6));
 
-        // autoChooser.addOption("Fancy Test Auto", AutoBuilder.buildAuto("Fancy Test Auto"));
-        // autoChooser.setDefaultOption("4m Foreward Auto", AutoBuilder.buildAuto("4m Foreward Auto"));
-        // autoChooser.addOption("Left Auto", AutoBuilder.buildAuto("Left Auto"));
-        // autoChooser.addOption("Right Auto", AutoBuilder.buildAuto("Right Auto"));
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // Manually Add Autos
+        buildAutoAndAddToChooser("Center Backup-Shoot");
+        buildAutoAndAddToChooser("Left Trench-Intake-Trench-Shoot");
+        buildAutoAndAddToChooser("Right Trench-Intake-Trench-Shoot");
+        // buildAutoAndAddToChooser("Center Backup-Shoot-Climb");
+        // buildAutoAndAddToChooser("Left-Backup-Shoot-Climb");
+        // buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
+        autoChooser.setDefaultOption("None", null);
 
-        autoChooser = AutoBuilder.buildAutoChooser();
+        CameraServer.startAutomaticCapture("Elevator", 0);
+        CameraServer.startAutomaticCapture("Hopper", 1);
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -124,7 +135,17 @@ public class RobotContainer {
         // Reset the field-centric heading on x press.
         driveController.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        // TODO: shoot distance code (MAYBE center to hub)
+        Command elevatorManualUp = elevator.runEnd(
+            () -> elevator.setElevatorMotor(11.0),
+            () -> elevator.stop()
+        );
+        Command elevatorManualDown = elevator.runEnd(
+            () -> elevator.setElevatorMotor(-11.0),
+            () -> elevator.stop()
+        );
+
+        driveController.rightBumper().and(driveController.y()).whileTrue(elevatorManualUp);
+        driveController.rightBumper().and(driveController.a()).whileTrue(elevatorManualDown);
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -140,6 +161,8 @@ public class RobotContainer {
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
+        
+        // manipController.rightBumper().and(driveController.leftBumper()).onTrue();
 
         /*Should toggle elevator position on press
         manipController.rightTrigger().onTrue(
@@ -175,5 +198,10 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    // utility function
+    private void buildAutoAndAddToChooser(String autoName) {
+        autoChooser.addOption(autoName, AutoBuilder.buildAuto(autoName));
     }
 }

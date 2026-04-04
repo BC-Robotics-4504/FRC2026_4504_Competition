@@ -37,7 +37,7 @@ public class CANElevatorSubsystem extends SubsystemBase {
         elevatorMotorConfig.closedLoop.p(P); 
         elevatorMotorConfig.closedLoop.i(I);
         elevatorMotorConfig.closedLoop.d(D);
-        elevatorMotorConfig.closedLoop.outputRange(-0.8, 0.8); // Limit max speed to 50% for safety
+        // elevatorMotorConfig.closedLoop.outputRange(-1.0, 1.0);
 
         elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     };
@@ -46,6 +46,10 @@ public class CANElevatorSubsystem extends SubsystemBase {
     // This tells the hardware to handle the movement
     pidController.setReference(rotations, SparkMax.ControlType.kPosition);
     System.out.println("ELEVATOR MOVING! " + rotations);
+  }
+
+  public void setElevatorMotor(double voltage) {
+    elevatorMotor.setVoltage(voltage);
   }
 
   public void stop() {

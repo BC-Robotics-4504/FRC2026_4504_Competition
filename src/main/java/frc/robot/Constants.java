@@ -35,9 +35,9 @@ public final class Constants {
 
   public static final class FuelConstants {
     // Motor controller IDs for Fuel Mechanism motors
-    public static final int INTAKE_MOTOR_ID = 52;
+    public static final int INTAKE_LEADER_MOTOR_ID = 52;
     public static final int FEEDER_MOTOR_ID = 53;
-    // Gap where follower feeder moter used to be
+    public static final int INTAKE_FOLLOWER_MOTOR_ID = 54;
     public static final int SHOOTER_MOTOR_ID = 55;
 
     // Current limit and nominal voltage for fuel mechanism motors.
@@ -98,7 +98,7 @@ public final class Constants {
 
     public static final double ELEVATOR_DEFAULT_ROTATION = 0;
     public static final double ELEVATOR_MIN_ROTATION = 0;
-    public static final double ELEVATOR_MAX_ROTATION = 100;
+    public static final double ELEVATOR_MAX_ROTATION = 185;
   }
 
   public static final class OperatorConstants {
