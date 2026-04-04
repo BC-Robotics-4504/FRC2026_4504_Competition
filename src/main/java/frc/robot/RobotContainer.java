@@ -41,7 +41,8 @@ import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANIntakeArmSubsystem;
-import frc.robot.subsystems.CANFuelSubsystem;
+import frc.robot.subsystems.CANShooterSubsystem;
+import frc.robot.subsystems.CANIntakeSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Constants.*;
@@ -66,7 +67,8 @@ public class RobotContainer {
 
     public final CANSwerveSubsystem drivetrain = TunerConstants.createDrivetrain();
 
-    public final CANFuelSubsystem fuelSubsystem = new CANFuelSubsystem();
+    public final CANShooterSubsystem shooter = new CANShooterSubsystem();
+    public final CANIntakeSubsystem intake = new CANIntakeSubsystem();
 
     public final CANElevatorSubsystem elevator = new CANElevatorSubsystem();
 
@@ -77,10 +79,10 @@ public class RobotContainer {
     private final VisionSubsystem vision = new VisionSubsystem(this::consumePoseEstimate);
 
     public RobotContainer() {
-        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
+        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(shooter).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
-        NamedCommands.registerCommand("Run Intake", new Intake(fuelSubsystem).asProxy().withTimeout(99));
+        NamedCommands.registerCommand("Run Intake", new Intake(intake).asProxy().withTimeout(99));
         NamedCommands.registerCommand("Elevator Down", new ElevatorDown(elevator).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Elevator Up", new ElevatorUp(elevator).asProxy().withTimeout(6));
 
@@ -161,14 +163,14 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Binds for shooter and intake, etc.
-        manipController.x().whileTrue(new Discharge(fuelSubsystem));
-        manipController.b().whileTrue(new Eject(fuelSubsystem));
+        manipController.x().whileTrue(new Discharge(shooter));
+        manipController.b().whileTrue(new Eject(intake));
         
         manipController.y().onTrue(new ElevatorUp(elevator));
         manipController.a().onTrue(new ElevatorDown(elevator));
 
-        manipController.leftTrigger().toggleOnTrue(new Intake(fuelSubsystem));
-        manipController.rightTrigger().whileTrue(new LaunchSequence(fuelSubsystem));
+        manipController.leftTrigger().toggleOnTrue(new Intake(intake));
+        manipController.rightTrigger().whileTrue(new LaunchSequence(shooter));
 
         manipController.leftBumper().onTrue(new LowerIntake(intakeArm));
         manipController.rightBumper().onTrue(new RaiseIntake(intakeArm));
