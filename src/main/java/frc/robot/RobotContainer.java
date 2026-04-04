@@ -22,6 +22,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 // import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Discharge;
 import frc.robot.commands.Eject;
@@ -35,10 +41,9 @@ import frc.robot.commands.RaiseIntake;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANIntakeArmSubsystem;
-// import frc.robot.subsystems.CANElevatorSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 import frc.robot.subsystems.CANSwerveSubsystem;
-// import frc.robot.Constants
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Constants.*;
 
 public class RobotContainer {
@@ -69,6 +74,8 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+    private final VisionSubsystem vision = new VisionSubsystem(this::consumePoseEstimate);
+
     public RobotContainer() {
         NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(fuelSubsystem).asProxy().withTimeout(6));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
@@ -89,6 +96,10 @@ public class RobotContainer {
 
         CameraServer.startAutomaticCapture("Elevator", 0);
         CameraServer.startAutomaticCapture("Hopper", 1);
+
+        SmartDashboard.putNumber("Ideal Shoot Distance", 3.0);
+        SmartDashboard.putNumber("Shoot Distance Epsilon", 0.5);
+        SmartDashboard.putBoolean("At Shoot Distance", false);
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
@@ -194,6 +205,27 @@ public class RobotContainer {
         );
         */
         // Inside RobotContainer.java
+    }
+
+    private void consumePoseEstimate(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs) {
+        // in meters
+        final Translation2d BLUE_HUB = new Translation2d(4.625594, 4.034536);
+        final Translation2d RED_HUB = new Translation2d(11.915394, 4.034536);
+
+        Translation2d translation = pose.getTranslation();
+
+        double distanceToBlueHub = translation.getDistance(BLUE_HUB);
+        double distanceToRedHub = translation.getDistance(RED_HUB);
+
+        double distanceToUse = Math.min(distanceToBlueHub, distanceToRedHub);
+        double idealShootDistance = SmartDashboard.getNumber("Ideal Shoot Distance", 3.0);
+        double shootDistanceEpsilon = SmartDashboard.getNumber("Shoot Distance Epsilon", 0.5);
+
+        if (idealShootDistance - shootDistanceEpsilon < distanceToUse && distanceToUse < idealShootDistance + shootDistanceEpsilon) {
+            SmartDashboard.putBoolean("At Shoot Distance", true);
+        } else {
+            SmartDashboard.putBoolean("At Shoot Distance", false);
+        }
     }
 
     public Command getAutonomousCommand() {
