@@ -119,9 +119,9 @@ public final class Constants {
 
   public static final class VisionConstants {
     public static final String kCameraName = "photonvision";
-    // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    // Cam mounted facing forward, 0.04 meters forward of center, 0.51 meters up from center.
     public static final Transform3d kRobotToCam =
-      new Transform3d(new Translation3d(0.5, 0.0, 0.559), new Rotation3d(0, 0, 0));
+      new Transform3d(new Translation3d(0.04, 0.0, 0.51), new Rotation3d(0, 0, 0));
 
     // The layout of the AprilTags on the field
     public static final AprilTagFieldLayout kTagLayout =
