@@ -82,9 +82,9 @@ public class RobotContainer {
         buildAutoAndAddToChooser("Center Backup-Shoot");
         buildAutoAndAddToChooser("Left Trench-Intake-Trench-Shoot");
         buildAutoAndAddToChooser("Right Trench-Intake-Trench-Shoot");
-        buildAutoAndAddToChooser("Center Backup-Shoot-Climb");
-        buildAutoAndAddToChooser("Left-Backup-Shoot-Climb");
-        buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
+        // buildAutoAndAddToChooser("Center Backup-Shoot-Climb");
+        // buildAutoAndAddToChooser("Left-Backup-Shoot-Climb");
+        // buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
         autoChooser.setDefaultOption("None", null);
 
         CameraServer.startAutomaticCapture("Elevator", 0);
