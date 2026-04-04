@@ -87,8 +87,8 @@ public class RobotContainer {
         buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
         autoChooser.setDefaultOption("None", null);
 
-        CameraServer.startAutomaticCapture("Front Camera", 0);
-        CameraServer.startAutomaticCapture("Back Camera", 1);
+        CameraServer.startAutomaticCapture("Elevator", 0);
+        CameraServer.startAutomaticCapture("Hopper", 1);
 
         SmartDashboard.putNumber("Shooter voltage", FuelConstants.SHOOTER_VOLTAGE);
         SmartDashboard.putNumber("Intake voltage", FuelConstants.INTAKE_VOLTAGE);
