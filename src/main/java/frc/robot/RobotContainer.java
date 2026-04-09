@@ -79,7 +79,7 @@ public class RobotContainer {
     private final VisionSubsystem vision = new VisionSubsystem(this::consumePoseEstimate);
 
     public RobotContainer() {
-        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(shooter).asProxy().withTimeout(6));
+        NamedCommands.registerCommand("Launch Sequence", new LaunchSequence(shooter).asProxy().withTimeout(10));
         NamedCommands.registerCommand("Intake Down", new LowerIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Intake Up", new RaiseIntake(intakeArm).asProxy().withTimeout(0.5));
         NamedCommands.registerCommand("Run Intake", new Intake(intake).asProxy().withTimeout(99));
