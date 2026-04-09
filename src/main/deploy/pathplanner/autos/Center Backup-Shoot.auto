@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "Launch Sequence"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Launch Sequence"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Run Intake"
+                }
+              }
+            ]
           }
         }
       ]
