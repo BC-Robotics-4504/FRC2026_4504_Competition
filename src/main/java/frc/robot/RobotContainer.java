@@ -96,7 +96,7 @@ public class RobotContainer {
         // buildAutoAndAddToChooser("Right-Backup-Shoot-Climb");
         autoChooser.setDefaultOption("None", null);
 
-        CameraServer.startAutomaticCapture("Elevator", 0);
+        CameraServer.startAutomaticCapture("Sweep", 0);
         CameraServer.startAutomaticCapture("Hopper", 1);
 
         SmartDashboard.putNumber("Ideal Shoot Distance", 3.0);
